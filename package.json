@@ -1,0 +1,15 @@
+{
+  "name": "@inari/ui-plugin-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Inari UI extensions: extension-point blueprints, host APIs, dev harness",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
