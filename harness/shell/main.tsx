@@ -165,10 +165,11 @@ function ResourcesPage(props: { extension: InariExtension }) {
 
 function App(props: { extension: InariExtension }) {
   const pageSlots = props.extension.slots.filter((s) => s.kind === 'page');
-  const context = useMemo(
-    () => ({ auth: { principal: null, getToken: () => 'dev-token' }, tenant: createTenantState([{ orgId: 'org:acme', orgName: 'Acme' }]) }),
-    [],
-  );
+  const auth = useAuth();
+  const tenant = useTenant();
+  const [, setVersion] = useState(0);
+  useEffect(() => tenant.onTenantChange(() => setVersion((v) => v + 1)), [tenant]);
+  const context = useMemo(() => ({ auth, tenant }), [auth, tenant]);
   return (
     <ShellLayout extension={props.extension}>
       <Routes>
