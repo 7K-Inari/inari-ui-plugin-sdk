@@ -15,10 +15,14 @@ import {
   useTenant,
 } from '@inari/ui-plugin-sdk';
 
-declare const __INARI_API_URL__: string;
-declare const __INARI_EXTENSION_ENTRY__: string;
+declare global {
+  interface Window {
+    __INARI_API_URL__: string;
+    __INARI_EXTENSION_ENTRY__: string;
+  }
+}
 
-const apiUrl = __INARI_API_URL__;
+const apiUrl = window.__INARI_API_URL__;
 
 function ShellLayout(props: { extension: InariExtension; children: React.ReactNode }) {
   const tenant = useTenant();
@@ -193,7 +197,7 @@ function App(props: { extension: InariExtension }) {
 }
 
 async function main() {
-  const mod = await import(/* @vite-ignore */ __INARI_EXTENSION_ENTRY__);
+  const mod = await import(/* @vite-ignore */ window.__INARI_EXTENSION_ENTRY__);
   const extension: InariExtension = mod.default ?? mod.extension;
   if (!extension) throw new Error('extension entry must default-export or export `extension`');
 

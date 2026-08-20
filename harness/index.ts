@@ -38,20 +38,34 @@ export async function startDevHarness(options: DevHarnessOptions): Promise<DevHa
   const vite = await createViteServer({
     root: shellRoot,
     server: { port },
+    plugins: [
+      {
+        name: 'inari-harness-config',
+        transformIndexHtml() {
+          return [
+            {
+              tag: 'script',
+              injectTo: 'head-prepend',
+              children: [
+                `window.__INARI_API_URL__ = ${JSON.stringify(api.url)};`,
+                `window.__INARI_EXTENSION_ENTRY__ = ${JSON.stringify(`/@fs${options.extensionEntry}`)};`,
+              ].join('\n'),
+            },
+          ];
+        },
+      },
+    ],
     resolve: {
       alias: [{ find: '@inari/ui-plugin-sdk', replacement: sdkEntry }],
       dedupe: ['react', 'react-dom', 'react-router-dom', 'zod'],
-    },
-    define: {
-      __INARI_API_URL__: JSON.stringify(api.url),
-      __INARI_EXTENSION_ENTRY__: JSON.stringify(options.extensionEntry),
     },
     optimizeDeps: { noDiscovery: true },
     logLevel: 'warn',
   });
   await vite.listen();
+  const actualUrl = vite.resolvedUrls?.local[0] ?? `http://localhost:${port}/`;
   return {
-    url: `http://localhost:${port}`,
+    url: actualUrl.replace(/\/$/, ''),
     apiUrl: api.url,
     vite,
     close: async () => {
