@@ -13,7 +13,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "paths": {
+      "@inari/ui-plugin-sdk": ["./src/index.ts"]
+    }
   },
   "include": ["src", "harness", "examples", "vitest.config.ts", "tsup.config.ts"]
 }
