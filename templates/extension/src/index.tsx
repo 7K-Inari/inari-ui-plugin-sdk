@@ -1,4 +1,4 @@
-import { createExtension, NavItemBlueprint, PageBlueprint, ClusterTabBlueprint } from '@inari/ui-plugin-sdk';
+import { createExtension, NavItemBlueprint, PageBlueprint, ClusterTabBlueprint } from '@7k-inari/ui-plugin-sdk';
 
 export default createExtension({
   manifest: {

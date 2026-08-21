@@ -18,7 +18,7 @@ In dev, the extension entry is loaded directly by the shell via Vite (no Module 
 ## Programmatic
 
 ```ts
-import { startDevHarness } from '@inari/ui-plugin-sdk/harness';
+import { startDevHarness } from '@7k-inari/ui-plugin-sdk/harness';
 
 const harness = await startDevHarness({
   extensionEntry: './src/index.tsx',

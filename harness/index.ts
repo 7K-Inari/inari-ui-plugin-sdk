@@ -56,7 +56,7 @@ export async function startDevHarness(options: DevHarnessOptions): Promise<DevHa
       },
     ],
     resolve: {
-      alias: [{ find: '@inari/ui-plugin-sdk', replacement: sdkEntry }],
+      alias: [{ find: '@7k-inari/ui-plugin-sdk', replacement: sdkEntry }],
       dedupe: ['react', 'react-dom', 'react-router-dom', 'zod'],
     },
     optimizeDeps: { noDiscovery: true },

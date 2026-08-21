@@ -3,7 +3,7 @@
 Inari UI extensions are **blueprint-driven** (Backstage new-frontend style): an extension never renders free-form into the host. It contributes typed slots, each created by a blueprint factory and registered through `createExtension`.
 
 ```ts
-import { createExtension, NavItemBlueprint, PageBlueprint } from '@inari/ui-plugin-sdk';
+import { createExtension, NavItemBlueprint, PageBlueprint } from '@7k-inari/ui-plugin-sdk';
 
 export default createExtension({
   manifest: { name: 'my-extension', version: '0.1.0', kind: 'ui' },

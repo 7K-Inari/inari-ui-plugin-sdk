@@ -8,7 +8,7 @@ The Inari host shell provides these as **singletons**. Remotes must treat them a
 | `react-dom` (>=18) | yes | peer dependency, external |
 | `react-router-dom` (v6) | yes | external |
 | `zod` (>=3) | yes | external (shared validation state) |
-| `@inari/ui-plugin-sdk` | yes | external — always resolved against the host's version |
+| `@7k-inari/ui-plugin-sdk` | yes | external — always resolved against the host's version |
 
 Everything else (component libraries, utilities) is bundled by the remote.
 

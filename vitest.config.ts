@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 export default defineConfig({
   resolve: {
     alias: {
-      '@inari/ui-plugin-sdk': fileURLToPath(new URL('./src/index.ts', import.meta.url)),
+      '@7k-inari/ui-plugin-sdk': fileURLToPath(new URL('./src/index.ts', import.meta.url)),
     },
   },
   test: {
