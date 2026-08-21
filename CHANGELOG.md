@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.4](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.3...ui-plugin-sdk-v0.1.4) (2026-08-21)
+
+
+### Bug Fixes
+
+* **ci:** bump publish job to Node 24, pin npm ^11 ([c328b73](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/c328b7390734e55c22507a78b33420ff9fc1104a))
+* **ci:** bump publish job to Node 24, pin npm ^11 for trusted publishing ([9b551bb](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/9b551bbd38801b55067190bfbd8d1b7b5a1e046c))
+
 ## [0.1.3](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.2...ui-plugin-sdk-v0.1.3) (2026-08-21)
 
 
