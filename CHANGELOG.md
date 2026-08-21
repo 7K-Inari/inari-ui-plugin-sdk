@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.5](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.4...ui-plugin-sdk-v0.1.5) (2026-08-21)
+
+
+### Bug Fixes
+
+* add repository field for npm provenance validation ([2b8c34c](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/2b8c34cf61550c1a0b1a35d17ecd87447cff582d))
+* add repository field for npm provenance validation ([c138ed0](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/c138ed085c8c68c0d50eb2bc2bea47ce9f99e21f))
+
 ## [0.1.4](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.3...ui-plugin-sdk-v0.1.4) (2026-08-21)
 
 
