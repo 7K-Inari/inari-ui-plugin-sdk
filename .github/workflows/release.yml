@@ -1,67 +1,36 @@
 name: release
 
+# Detects a merged Release PR (release-please action self-detection — robust
+# under merge-commit and squash alike), creates tag + GitHub Release, then
+# publishes the npm package. No tag-push triggers, no manual releases.
+
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 permissions:
   contents: write
+  pull-requests: write
+  issues: write
 
 jobs:
-  detect-release:
+  release:
     runs-on: ubuntu-latest
     outputs:
-      is-release: ${{ steps.check.outputs.is-release }}
-      version: ${{ steps.check.outputs.version }}
+      released: ${{ steps.rp.outputs.release_created }}
+      tag_name: ${{ steps.rp.outputs.tag_name }}
+      version: ${{ steps.rp.outputs.version }}
     steps:
       - uses: actions/checkout@v4
-
-      - name: Detect merged Release PR
-        id: check
-        env:
-          HEAD_MSG: ${{ github.event.head_commit.message }}
-          HEAD_AUTHOR: ${{ github.event.head_commit.author.username }}
-        run: |
-          if echo "$HEAD_MSG" | grep -qE '^chore(\(main\))?: release' || [ "$HEAD_AUTHOR" = "release-please[bot]" ]; then
-            VERSION=$(node -p "require('./package.json').version")
-            echo "is-release=true" >> "$GITHUB_OUTPUT"
-            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          else
-            echo "is-release=false" >> "$GITHUB_OUTPUT"
-          fi
-
-  tag-and-release:
-    needs: detect-release
-    if: needs.detect-release.outputs.is-release == 'true'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Extract changelog notes
-        id: notes
-        run: |
-          VERSION="${{ needs.detect-release.outputs.version }}"
-          awk "/^## .*${VERSION}/{flag=1; next} /^## /{flag=0} flag" CHANGELOG.md > release-notes.md || true
-          [ -s release-notes.md ] || echo "Release v${VERSION}" > release-notes.md
-
-      - name: Create tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag -a "v${{ needs.detect-release.outputs.version }}" -m "Release v${{ needs.detect-release.outputs.version }}"
-          git push origin "v${{ needs.detect-release.outputs.version }}"
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
+      - uses: googleapis/release-please-action@v4
+        id: rp
         with:
-          tag_name: v${{ needs.detect-release.outputs.version }}
-          name: v${{ needs.detect-release.outputs.version }}
-          body_path: release-notes.md
+          release-type: node
+          skip-github-pull-request: true
 
   publish-npm:
-    needs: [detect-release, tag-and-release]
-    if: needs.detect-release.outputs.is-release == 'true'
+    needs: release
+    if: needs.release.outputs.released == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -85,7 +54,18 @@ jobs:
             echo "No build script yet (pre-M4 scaffold); skipping"
           fi
 
+      - name: Guard NPM_TOKEN
+        id: guard
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          if [ -z "${NPM_TOKEN:-}" ]; then
+            echo "::warning::NPM_TOKEN secret not set — skipping npm publish; the package stays unpublished until the secret exists"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to npm
+        if: steps.guard.outputs.skip != 'true'
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
