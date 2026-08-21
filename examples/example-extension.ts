@@ -6,7 +6,7 @@ import {
   ClusterTabBlueprint,
   CatalogCardBlueprint,
   InstanceActionBlueprint,
-} from '@inari/ui-plugin-sdk';
+} from '@7k-inari/ui-plugin-sdk';
 
 export default createExtension({
   manifest: {

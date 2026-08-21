@@ -14,7 +14,7 @@ cd my-extension && npm install && npm run dev
 ## Writing an extension
 
 ```tsx
-import { createExtension, NavItemBlueprint, PageBlueprint } from '@inari/ui-plugin-sdk';
+import { createExtension, NavItemBlueprint, PageBlueprint } from '@7k-inari/ui-plugin-sdk';
 
 export default createExtension({
   manifest: { name: 'my-extension', version: '0.1.0', kind: 'ui' },
@@ -36,11 +36,11 @@ export default createExtension({
 
 | Import | Contents |
 |---|---|
-| `@inari/ui-plugin-sdk` | blueprints, `createExtension`, manifest, host APIs |
-| `@inari/ui-plugin-sdk/tokens` | design tokens (TS object) |
-| `@inari/ui-plugin-sdk/tokens.css` | design tokens (CSS custom properties) |
-| `@inari/ui-plugin-sdk/testing` | mock host contexts for unit tests |
-| `@inari/ui-plugin-sdk/harness` | `startDevHarness`, mock control plane |
+| `@7k-inari/ui-plugin-sdk` | blueprints, `createExtension`, manifest, host APIs |
+| `@7k-inari/ui-plugin-sdk/tokens` | design tokens (TS object) |
+| `@7k-inari/ui-plugin-sdk/tokens.css` | design tokens (CSS custom properties) |
+| `@7k-inari/ui-plugin-sdk/testing` | mock host contexts for unit tests |
+| `@7k-inari/ui-plugin-sdk/harness` | `startDevHarness`, mock control plane |
 
 Part of the **Inari** multi-tenant Internal Developer Platform (GitHub org `7K-Inari`).
 Canonical architecture & development plan: [inari-docs/docs/architecture/inari-platform-plan.md](https://github.com/7K-Inari/inari-docs/blob/main/docs/architecture/inari-platform-plan.md)

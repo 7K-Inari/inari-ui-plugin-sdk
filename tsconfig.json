@@ -15,7 +15,7 @@
     "noEmit": true,
     "types": ["vitest/globals"],
     "paths": {
-      "@inari/ui-plugin-sdk": ["./src/index.ts"]
+      "@7k-inari/ui-plugin-sdk": ["./src/index.ts"]
     }
   },
   "include": ["src", "harness", "examples", "vitest.config.ts", "tsup.config.ts"]

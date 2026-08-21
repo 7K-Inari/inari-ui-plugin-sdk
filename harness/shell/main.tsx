@@ -13,7 +13,7 @@ import {
   type TenantRef,
   useAuth,
   useTenant,
-} from '@inari/ui-plugin-sdk';
+} from '@7k-inari/ui-plugin-sdk';
 
 declare global {
   interface Window {
