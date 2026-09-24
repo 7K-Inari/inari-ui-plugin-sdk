@@ -10,7 +10,7 @@ export interface Cluster {
 export interface CatalogItem {
   id: string;
   name: string;
-  source: 'discovered' | 'curated' | 'platform';
+  source: 'discovered' | 'curated' | 'platform' | 'template';
   version: string;
   description?: string;
   schema?: Record<string, unknown>;
