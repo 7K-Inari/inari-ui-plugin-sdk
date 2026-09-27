@@ -1,3 +1,8 @@
+import { ApiError } from './api-error';
+import { classifyExtensionError } from './extension-errors';
+
+export { ApiError } from './api-error';
+
 export interface Cluster {
   id: string;
   name: string;
@@ -41,11 +46,6 @@ export interface ApiClientOptions {
   getToken: () => Promise<string | undefined> | string | undefined;
   fetchImpl?: typeof fetch;
 }
-
-import { ApiError } from './api-error';
-import { classifyExtensionError } from './extension-errors';
-
-export { ApiError } from './api-error';
 
 export class ApiClient {
   private readonly baseUrl: string;
