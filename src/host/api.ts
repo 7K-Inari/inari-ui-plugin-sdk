@@ -1,3 +1,8 @@
+import { ApiError } from './api-error';
+import { classifyExtensionError, ExtensionFailureError } from './extension-errors';
+
+export { ApiError } from './api-error';
+
 export interface Cluster {
   id: string;
   name: string;
@@ -40,16 +45,6 @@ export interface ApiClientOptions {
   baseUrl: string;
   getToken: () => Promise<string | undefined> | string | undefined;
   fetchImpl?: typeof fetch;
-}
-
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
 }
 
 export class ApiClient {
@@ -112,5 +107,44 @@ export class ApiClient {
 
   approveApproval(id: string): Promise<ApprovalRequest> {
     return this.request('POST', `/api/v1/approvals/${encodeURIComponent(id)}/approve`);
+  }
+
+  async invokeExtension<T>(
+    name: string,
+    path: string,
+    init: { method?: string; body?: unknown } = {},
+  ): Promise<T> {
+    const token = await this.getToken();
+    const res = await this.fetchImpl(
+      `${this.baseUrl}/api/extensions/${encodeURIComponent(name)}${path}`,
+      {
+        method: init.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+        body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      },
+    );
+    const text = await res.text();
+    let parsed: unknown;
+    let parseFailed = false;
+    try {
+      parsed = text ? JSON.parse(text) : undefined;
+    } catch {
+      parsed = undefined;
+      parseFailed = true;
+    }
+    if (!res.ok) {
+      throw classifyExtensionError(res.status, parsed, name);
+    }
+    if (parseFailed) {
+      throw new ExtensionFailureError(
+        res.status,
+        `extension '${name}' returned a non-JSON response (${res.status})`,
+        { extension: name },
+      );
+    }
+    return parsed as T;
   }
 }

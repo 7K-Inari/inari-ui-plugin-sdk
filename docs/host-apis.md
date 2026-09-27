@@ -25,6 +25,25 @@ const api = new ApiClient({ baseUrl, getToken });
 
 Thin typed wrapper over the control-plane REST surface: clusters, catalog items, resource instances, approvals. Resource interfaces are `@inari-api`-aligned minimal projections and will be swapped for generated OpenAPI types when `inari-api` ships its TS client. Errors surface as `ApiError` with `status`.
 
+## Extension invocation & typed errors
+
+```ts
+import { ApiClient, isExtensionApiError, SessionExpiredError } from '@7k-inari/ui-plugin-sdk';
+await api.invokeExtension('my-ext', '/path', { method: 'POST', body: { ... } });
+```
+
+`invokeExtension` calls the authenticated proxy path `/api/extensions/<name>/*` and throws a typed `ExtensionApiError` (subclass of `ApiError`) on failure. Discriminate via the `kind` literal (safe across Module Federation realms) or `instanceof`:
+
+| `kind` | class | meaning | `retryable` |
+| --- | --- | --- | --- |
+| `session-expired` | `SessionExpiredError` | user session/extension token expired; host should run zero-prompt SSO bootstrap and retry once | `true` |
+| `downstream-denied` | `DownstreamDeniedError` | upstream provider (e.g. git host) denied the operation | `false` |
+| `fga-denied` | `FgaDeniedError` | Inari OpenFGA authorization denied | `false` |
+| `exchange-failed` | `ExchangeFailedError` | token exchange / auth-model failure server-side | `false` |
+| `extension-failure` | `ExtensionFailureError` | generic/unknown extension failure | `false` |
+
+Metadata for re-auth flows: `requestId`, `extension`, and (for `session-expired`) `reauth: { provider?, hint? }`. Only whitelisted, non-sensitive fields are copied from the server error body — tokens, authorization headers, cookies, and upstream payloads are never exposed on error objects. The SDK never acquires or stores credentials; re-auth and retry are orchestrated by the host (`inari-ui`).
+
 ## Design tokens
 
 ```ts
@@ -36,4 +55,4 @@ TS object plus CSS custom properties (`--inari-*`), light theme by default, dark
 
 ## Testing
 
-`@7k-inari/ui-plugin-sdk/testing` exports `mockPrincipal`, `mockAuthState`, `mockTenantState`, `mockApiClient`, `mockSlotContext` for extension unit tests.
+`@7k-inari/ui-plugin-sdk/testing` exports `mockPrincipal`, `mockAuthState`, `mockTenantState`, `mockApiClient`, `mockSlotContext`, `mockExtensionError` for extension unit tests.
