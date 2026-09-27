@@ -1,5 +1,5 @@
 import { ApiError } from './api-error';
-import { classifyExtensionError } from './extension-errors';
+import { classifyExtensionError, ExtensionFailureError } from './extension-errors';
 
 export { ApiError } from './api-error';
 
@@ -128,13 +128,22 @@ export class ApiClient {
     );
     const text = await res.text();
     let parsed: unknown;
+    let parseFailed = false;
     try {
       parsed = text ? JSON.parse(text) : undefined;
     } catch {
       parsed = undefined;
+      parseFailed = true;
     }
     if (!res.ok) {
       throw classifyExtensionError(res.status, parsed, name);
+    }
+    if (parseFailed) {
+      throw new ExtensionFailureError(
+        res.status,
+        `extension '${name}' returned a non-JSON response (${res.status})`,
+        { extension: name },
+      );
     }
     return parsed as T;
   }

@@ -104,6 +104,13 @@ describe('classifyExtensionError', () => {
     expect(rec.status).toBe(401);
   });
 
+  it('truncates overly long server messages', () => {
+    const long = 'x'.repeat(1000);
+    const err = classifyExtensionError(500, { error: { code: 'boom', message: long } }, 'git');
+    expect(err.message.length).toBeLessThanOrEqual(301);
+    expect(err.message.endsWith('…')).toBe(true);
+  });
+
   it('drops non-string reauth fields', () => {
     const err = classifyExtensionError(
       401,

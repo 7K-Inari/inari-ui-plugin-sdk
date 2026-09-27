@@ -114,6 +114,14 @@ function fallbackKind(status: number): ExtensionErrorKind {
   return 'extension-failure';
 }
 
+const MAX_MESSAGE_LENGTH = 300;
+
+function sanitizeMessage(message: string): string {
+  return message.length > MAX_MESSAGE_LENGTH
+    ? `${message.slice(0, MAX_MESSAGE_LENGTH)}…`
+    : message;
+}
+
 export function classifyExtensionError(
   status: number,
   body: unknown,
@@ -122,7 +130,9 @@ export function classifyExtensionError(
   const parsed = parseBody(body);
   const mapped = parsed.code ? CODE_TO_KIND[parsed.code] : undefined;
   const kind = mapped ?? fallbackKind(status);
-  const message = parsed.message ?? `extension invocation failed: ${status}`;
+  const message = parsed.message !== undefined
+    ? sanitizeMessage(parsed.message)
+    : `extension invocation failed: ${status}`;
   const meta: { requestId?: string; extension?: string; reauth?: ExtensionReauthMeta } = {};
   if (parsed.requestId !== undefined) meta.requestId = parsed.requestId;
   if (extension !== undefined) meta.extension = extension;

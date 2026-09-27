@@ -119,6 +119,21 @@ describe('ApiClient', () => {
       expect(JSON.stringify(err)).not.toContain('Bearer abc');
     });
 
+    it('throws ExtensionFailureError when a successful response is not JSON', async () => {
+      const fetchImpl = vi.fn(async () => new Response('<html>nope', { status: 200 }));
+      const client = new ApiClient({ baseUrl: 'http://x', getToken: () => 't', fetchImpl });
+      const err = await client.invokeExtension('git-ext', '/repos').catch((e: unknown) => e);
+      expect(err).toBeInstanceOf(ExtensionFailureError);
+      expect((err as ExtensionFailureError).extension).toBe('git-ext');
+      expect((err as ExtensionFailureError).message).toContain('non-JSON');
+    });
+
+    it('returns undefined for empty successful responses', async () => {
+      const fetchImpl = vi.fn(async () => new Response(null, { status: 204 }));
+      const client = new ApiClient({ baseUrl: 'http://x', getToken: () => 't', fetchImpl });
+      await expect(client.invokeExtension('git-ext', '/repos')).resolves.toBeUndefined();
+    });
+
     it('keeps existing methods throwing plain ApiError, not ExtensionApiError', async () => {
       const fetchImpl = vi.fn(async () => jsonResponse({ error: { code: 'session_expired' } }, 401));
       const client = new ApiClient({ baseUrl: 'http://x', getToken: () => 't', fetchImpl });
