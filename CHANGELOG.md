@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.6...ui-plugin-sdk-v0.1.7) (2026-09-27)
+
+
+### Features
+
+* **sdk:** typed extension invocation errors with re-auth surfacing ([#17](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/17)) ([da876c4](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/da876c45b9f116f51957fa965bb06c4b3e58015f))
+
 ## [0.1.6](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.5...ui-plugin-sdk-v0.1.6) (2026-09-24)
 
 
