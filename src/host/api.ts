@@ -42,15 +42,10 @@ export interface ApiClientOptions {
   fetchImpl?: typeof fetch;
 }
 
-export class ApiError extends Error {
-  constructor(
-    public readonly status: number,
-    message: string,
-  ) {
-    super(message);
-    this.name = 'ApiError';
-  }
-}
+import { ApiError } from './api-error';
+import { classifyExtensionError } from './extension-errors';
+
+export { ApiError } from './api-error';
 
 export class ApiClient {
   private readonly baseUrl: string;
@@ -112,5 +107,35 @@ export class ApiClient {
 
   approveApproval(id: string): Promise<ApprovalRequest> {
     return this.request('POST', `/api/v1/approvals/${encodeURIComponent(id)}/approve`);
+  }
+
+  async invokeExtension<T>(
+    name: string,
+    path: string,
+    init: { method?: string; body?: unknown } = {},
+  ): Promise<T> {
+    const token = await this.getToken();
+    const res = await this.fetchImpl(
+      `${this.baseUrl}/api/extensions/${encodeURIComponent(name)}${path}`,
+      {
+        method: init.method ?? 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...(token ? { authorization: `Bearer ${token}` } : {}),
+        },
+        body: init.body === undefined ? undefined : JSON.stringify(init.body),
+      },
+    );
+    const text = await res.text();
+    let parsed: unknown;
+    try {
+      parsed = text ? JSON.parse(text) : undefined;
+    } catch {
+      parsed = undefined;
+    }
+    if (!res.ok) {
+      throw classifyExtensionError(res.status, parsed, name);
+    }
+    return parsed as T;
   }
 }
