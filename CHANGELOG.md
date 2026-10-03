@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.1.8](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.7...ui-plugin-sdk-v0.1.8) (2026-10-03)
+
+
+### Features
+
+* **release:** per-merge edge releases (vX.Y.Z-&lt;sha&gt; + moving edge channel) ([#19](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/19)) ([c4bba51](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/c4bba5109db4cb2a20b478c0c08766d4a8d9e742))
+
+
+### Miscellaneous Chores
+
+* **deps:** pin dependencies ([#25](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/25)) ([37ed147](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/37ed147cf5f4c4f958f28b30e14da82bf15caf0b))
+* **deps:** update dependency @eslint/js to v10 ([#29](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/29)) ([6e84531](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/6e84531556bb5c283796b839d6ffc5b6e8801871))
+* **deps:** update dependency @testing-library/react to v16.3.3 ([#26](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/26)) ([f9c852d](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/f9c852d4dce30e8862a0afb130c68e78013f63aa))
+* **deps:** update dependency @types/node to v22.20.5 ([#27](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/27)) ([cb486e0](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/cb486e086257f88b43dda7d95b3b4a03fe204f02))
+* **deps:** update dependency @types/node to v26 ([#30](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/30)) ([1a05a11](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/1a05a11c0825bef1123ac463ae2e150e0adf4a60))
+* **deps:** update dependency eslint to v10 ([#32](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/32)) ([c7bd8bb](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/c7bd8bbbded70649af76a125ee2f10865fb78dd6))
+* **deps:** update dependency react-router-dom to v6.30.6 [security] ([#21](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/21)) ([5177564](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/5177564ce5e90c0be912ce754617f94278540bb4))
+* **deps:** update dependency react-router-dom to v7 ([#36](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/36)) ([01be166](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/01be166e3d797d121e70253adf11b0de0510befa))
+* **deps:** update dependency typescript-eslint to v8.71.0 ([#28](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/28)) ([bf8286e](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/bf8286efbdfca6a1c45c2d8843bf37b9b373df66))
+* **deps:** update dependency vite to v6 [security] ([#22](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/22)) ([acf03aa](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/acf03aa231df1ba22a91f4dacc00e0a2be0223cb))
+* **deps:** update dependency zod to v4 ([#39](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/39)) ([df3f75b](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/df3f75b1ea6e435ec711d3f88cea6fb996340afe))
+* **deps:** update github-actions ([#40](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/40)) ([981397b](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/981397b8b9bbf7bb664be16507a0045c455e071a))
+
 ## [0.1.7](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.6...ui-plugin-sdk-v0.1.7) (2026-09-27)
 
 
