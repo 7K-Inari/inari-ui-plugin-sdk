@@ -6,10 +6,11 @@ export default defineConfig({
     'tokens/index': 'src/tokens/index.ts',
     'testing/index': 'src/testing/index.ts',
     'harness/index': 'harness/index.ts',
+    'harness/build': 'harness/build.ts',
   },
   format: ['esm', 'cjs'],
   dts: true,
   sourcemap: true,
   clean: true,
-  external: ['react', 'react-dom', 'react-router-dom', 'zod', 'vite', '@vitejs/plugin-react'],
+  external: ['react', 'react-dom', 'react-router-dom', 'zod', 'vite', '@vitejs/plugin-react', 'webpack', 'ts-loader'],
 });

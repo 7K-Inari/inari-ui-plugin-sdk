@@ -13,7 +13,7 @@ Starts:
 1. **Mock control plane** (default port 9099) — stub REST endpoints (`/api/v1/clusters`, `/api/v1/catalog/items`, `/api/v1/resources`, `/api/v1/approvals`, `/api/v1/tenants`) backed by fixtures.
 2. **Shell preview** (default port 5173) — a minimal host shell (sidebar, tenant switcher, catalog/clusters/resources pages) that mounts the extension's slots: nav items in the sidebar, pages as routes, cluster tabs on the cluster detail page, catalog cards on catalog items, instance actions on resources.
 
-In dev, the extension entry is loaded directly by the shell via Vite (no Module Federation handshake). In production the host loads `remoteEntry.js` served via the backend/OCI registry (spec §5.8); the blueprint/manifest contract is identical either way.
+In dev, the extension entry is loaded directly by the shell via Vite (no Module Federation handshake). For a production artifact, run `npx inari-ui-ext build ./src/index.tsx --name <registry-name>` (see [Production build](build.md)); the host loads the emitted `remoteEntry.js` served via the backend/OCI registry (spec §5.8). The blueprint/manifest contract is identical either way.
 
 ## Programmatic
 

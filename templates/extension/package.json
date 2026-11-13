@@ -5,12 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "inari-ui-ext dev ./src/index.tsx",
-    "build": "tsc --noEmit"
+    "build": "inari-ui-ext build ./src/index.tsx --name my-inari-extension",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@7k-inari/ui-plugin-sdk": "^0.1.1",
+    "@7k-inari/ui-plugin-sdk": "^0.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": ">=6",
     "zod": "^4.0.0"
   },
   "devDependencies": {
