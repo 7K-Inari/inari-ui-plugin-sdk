@@ -163,8 +163,20 @@ function extensionProxyPath(name: string, path: string): string {
   }
   const pathname = path.split(/[?#]/, 1)[0];
   for (const segment of pathname.split('/')) {
-    if (segment === '.' || segment === '..') {
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(segment);
+    } catch {
+      throw new Error('extension path contains invalid percent encoding');
+    }
+    if (decoded === '.' || decoded === '..') {
       throw new Error('extension path must not contain dot segments');
+    }
+    for (const character of decoded) {
+      const code = character.charCodeAt(0);
+      if (character === '/' || character === '\\' || code <= 0x1f || code === 0x7f) {
+        throw new Error('extension path contains forbidden encoded characters');
+      }
     }
   }
   return `/api/extensions/${encodeURIComponent(name)}${path}`;

@@ -178,6 +178,10 @@ describe('ApiClient', () => {
       ['protocol-relative path', 'ext', '//evil.example/x'],
       ['parent traversal', 'ext', '/../admin'],
       ['nested traversal', 'ext', '/actions/../../admin'],
+      ['percent-encoded parent traversal', 'ext', '/%2e%2e/admin'],
+      ['partially encoded parent traversal', 'ext', '/.%2e/admin'],
+      ['encoded path separator', 'ext', '/actions%2f..%2fadmin'],
+      ['malformed percent encoding', 'ext', '/actions/%'],
       ['backslash traversal', 'ext', '/actions\\..\\admin'],
       ['control character', 'ext', '/actions/\u0000'],
     ])('rejects %s before fetching', async (_label, name, path) => {

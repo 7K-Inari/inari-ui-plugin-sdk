@@ -18,7 +18,7 @@ The command typechecks the entry graph through `ts-loader` and emits a productio
 
 The build marks these as singletons with no local fallback:
 
-- `react`
+- `react`, including the automatic `react/jsx-runtime`
 - `react-dom` and `react-dom/client`
 - `react-router-dom`
 - `zod`

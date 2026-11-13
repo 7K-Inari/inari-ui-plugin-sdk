@@ -4,7 +4,7 @@ The Inari host shell provides these as **singletons**. Remotes must treat them a
 
 | Package | Provided by host | Remotes |
 | --- | --- | --- |
-| `react` (>=18) | yes | peer dependency, host-shared, no fallback |
+| `react` (>=18), including `react/jsx-runtime` | yes | peer dependency, host-shared, no fallback |
 | `react-dom` (>=18), including `react-dom/client` | yes | peer dependency, host-shared, no fallback |
 | `react-router-dom` (>=6) | yes | peer dependency, host-shared, no fallback |
 | `zod` (>=3) | yes | peer dependency, host-shared validation state |

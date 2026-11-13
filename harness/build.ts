@@ -28,6 +28,7 @@ export async function buildExtension(options: BuildExtensionOptions): Promise<Bu
   const require = createRequire(import.meta.url);
   const shared = {
     react: { singleton: true, requiredVersion: false, import: false },
+    'react/jsx-runtime': { singleton: true, requiredVersion: false, import: false },
     'react-dom': { singleton: true, requiredVersion: false, import: false },
     'react-dom/client': { singleton: true, requiredVersion: false, import: false },
     'react-router-dom': { singleton: true, requiredVersion: false, import: false },

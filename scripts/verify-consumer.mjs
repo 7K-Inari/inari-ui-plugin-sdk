@@ -62,7 +62,8 @@ try {
     include: ['src'],
   }, null, 2));
   mkdirSync(join(work, 'src'), { recursive: true });
-  writeFileSync(join(work, 'src/index.tsx'), `import { createElement } from 'react';
+  writeFileSync(join(work, 'src/index.tsx'), `import { version as reactVersion } from 'react';
+import { version as reactDOMVersion } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
@@ -70,7 +71,7 @@ import { createExtension, PageBlueprint } from '@7k-inari/ui-plugin-sdk';
 
 function CleanPage() {
   const location = useLocation();
-  return createElement('p', null, 'Clean consumer at ' + location.pathname + ' (' + typeof createRoot + ')');
+  return <p>Clean consumer at {location.pathname} ({typeof createRoot}) React {reactVersion}/{reactDOMVersion}</p>;
 }
 
 export default createExtension({
@@ -134,6 +135,7 @@ try {
 
   const countBeforeReject = requests.length;
   await assert.rejects(client.invokeExtension('clean-consumer', '/../admin'), /dot segments/);
+  await assert.rejects(client.invokeExtension('clean-consumer', '/%2e%2e/admin'), /dot segments/);
   assert.equal(requests.length, countBeforeReject);
   assert.equal(extensionContainerName('clean-consumer'), 'clean_consumer');
 } finally {

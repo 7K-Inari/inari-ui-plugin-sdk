@@ -33,10 +33,18 @@ describe('buildExtension', { timeout: 30000 }, () => {
 
     const stats = result.stats.toJson({ modules: true });
     const modules = stats.modules ?? [];
-    const serialized = modules.map((module) => `${module.moduleType}:${module.name}`).join('\n');
-    for (const singleton of ['react', 'react-dom', 'react-router-dom', 'zod', '@7k-inari/ui-plugin-sdk']) {
-      expect(serialized).toContain(singleton);
-      expect(serialized).toContain('consume shared module');
+    for (const singleton of [
+      'react',
+      'react/jsx-runtime',
+      'react-dom',
+      'react-dom/client',
+      'react-router-dom',
+      'zod',
+      '@7k-inari/ui-plugin-sdk',
+    ]) {
+      const consumed = modules.some((module) =>
+        module.moduleType === 'consume-shared-module' && module.name?.includes(` ${singleton}@`));
+      expect(consumed, `${singleton} is consumed from the host share scope`).toBe(true);
     }
     for (const forbidden of [
       '/node_modules/react/',
