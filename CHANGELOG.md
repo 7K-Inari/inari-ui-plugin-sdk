@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.8...ui-plugin-sdk-v0.1.9) (2026-11-14)
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency webpack to v5.112.2 ([#73](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/73)) ([7edc180](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/7edc1800f643bc58b9bf8c26abccd9ba8eb58ea4))
+
 ## [0.1.8](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.7...ui-plugin-sdk-v0.1.8) (2026-11-14)
 
 
