@@ -15,7 +15,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['bin/**/*.mjs', '*.config.{ts,js}', 'harness/**/*.ts'],
+    files: ['bin/**/*.mjs', 'scripts/**/*.mjs', '*.config.{ts,js}', 'harness/**/*.ts'],
     languageOptions: { globals: nodeGlobals },
   },
 );

@@ -32,7 +32,9 @@ import { ApiClient, isExtensionApiError, SessionExpiredError } from '@7k-inari/u
 await api.invokeExtension('my-ext', '/path', { method: 'POST', body: { ... } });
 ```
 
-`invokeExtension` calls the authenticated proxy path `/api/extensions/<name>/*` and throws a typed `ExtensionApiError` (subclass of `ApiError`) on failure. Discriminate via the `kind` literal (safe across Module Federation realms) or `instanceof`:
+`invokeExtension` calls the authenticated proxy path `/api/extensions/<name>/*` and throws a typed `ExtensionApiError` (subclass of `ApiError`) on failure. It resolves `getToken` on every call, encodes the extension name, preserves nested paths/query strings, and rejects protocol-relative paths, dot segments, backslashes, and control characters before making a request. Do not build proxy URLs or attach bearer tokens with a consumer-owned fetch helper.
+
+Both the canonical flat proxy error (`detail` + `code`) and existing nested `error` envelopes are supported. For `reauth_required`, the SDK reads the provider from `X-Inari-Reauth` when the body has no re-auth metadata. Discriminate via the `kind` literal (safe across Module Federation realms) or `instanceof`:
 
 | `kind` | class | meaning | `retryable` |
 | --- | --- | --- | --- |

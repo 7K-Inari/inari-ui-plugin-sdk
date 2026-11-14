@@ -142,5 +142,53 @@ describe('ApiClient', () => {
       expect(err).toBeInstanceOf(ApiError);
       expect(err).not.toBeInstanceOf(ExtensionApiError);
     });
+
+    it('preserves nested action paths and query strings', async () => {
+      const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+      const client = new ApiClient({ baseUrl: 'http://x/', getToken: () => 't', fetchImpl });
+      await client.invokeExtension('my ext', '/actions/sync?dryRun=true');
+      const [url] = fetchImpl.mock.calls[0] as unknown as [string];
+      expect(url).toBe('http://x/api/extensions/my%20ext/actions/sync?dryRun=true');
+    });
+
+    it('refreshes the host token on every invocation', async () => {
+      const fetchImpl = vi.fn(async () => jsonResponse({ ok: true }));
+      const tokens = ['first', 'second'];
+      const client = new ApiClient({ baseUrl: 'http://x', getToken: () => tokens.shift(), fetchImpl });
+      await client.invokeExtension('ext', '/one');
+      await client.invokeExtension('ext', '/two');
+      const auth = fetchImpl.mock.calls.map((call) => (call as unknown as [string, RequestInit])[1].headers as Record<string, string>);
+      expect(auth.map((headers) => headers.authorization)).toEqual(['Bearer first', 'Bearer second']);
+    });
+
+    it('classifies flat proxy re-auth responses with the response header', async () => {
+      const fetchImpl = vi.fn(async () => new Response(
+        JSON.stringify({ detail: 're-authentication required', code: 'reauth_required' }),
+        { status: 401, headers: { 'content-type': 'text/plain; charset=utf-8', 'X-Inari-Reauth': 'argocd' } },
+      ));
+      const client = new ApiClient({ baseUrl: 'http://x', getToken: () => 't', fetchImpl });
+      const err = await client.invokeExtension('argocd', '/actions/sync').catch((e: unknown) => e);
+      expect(err).toBeInstanceOf(SessionExpiredError);
+      expect((err as SessionExpiredError).reauth).toEqual({ provider: 'argocd' });
+    });
+
+    it.each([
+      ['empty extension name', '', '/actions/sync'],
+      ['missing leading slash', 'ext', 'actions/sync'],
+      ['protocol-relative path', 'ext', '//evil.example/x'],
+      ['parent traversal', 'ext', '/../admin'],
+      ['nested traversal', 'ext', '/actions/../../admin'],
+      ['percent-encoded parent traversal', 'ext', '/%2e%2e/admin'],
+      ['partially encoded parent traversal', 'ext', '/.%2e/admin'],
+      ['encoded path separator', 'ext', '/actions%2f..%2fadmin'],
+      ['malformed percent encoding', 'ext', '/actions/%'],
+      ['backslash traversal', 'ext', '/actions\\..\\admin'],
+      ['control character', 'ext', '/actions/\u0000'],
+    ])('rejects %s before fetching', async (_label, name, path) => {
+      const fetchImpl = vi.fn(async () => jsonResponse({}));
+      const client = new ApiClient({ baseUrl: 'http://x', getToken: () => 't', fetchImpl });
+      await expect(client.invokeExtension(name, path)).rejects.toThrow();
+      expect(fetchImpl).not.toHaveBeenCalled();
+    });
   });
 });

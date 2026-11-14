@@ -18,5 +18,6 @@
       "@7k-inari/ui-plugin-sdk": ["./src/index.ts"]
     }
   },
-  "include": ["src", "harness", "examples", "vitest.config.ts", "tsup.config.ts"]
+  "include": ["src", "harness", "examples", "vitest.config.ts", "tsup.config.ts"],
+  "exclude": ["harness/testdata/broken-extension.ts"]
 }

@@ -122,6 +122,36 @@ describe('classifyExtensionError', () => {
   });
 });
 
+describe('canonical proxy error responses', () => {
+  it('maps flat reauth_required JSON and X-Inari-Reauth provider', () => {
+    const err = classifyExtensionError(
+      401,
+      { detail: 're-authentication required', code: 'reauth_required' },
+      'argocd',
+      new Headers({ 'X-Inari-Reauth': 'argocd' }),
+    );
+    expect(err).toBeInstanceOf(SessionExpiredError);
+    expect(err.message).toBe('re-authentication required');
+    expect(err.reauth).toEqual({ provider: 'argocd' });
+    expect(err.retryable).toBe(true);
+  });
+
+  it('uses body reauth metadata before the provider header', () => {
+    const err = classifyExtensionError(
+      401,
+      { detail: 'expired', code: 'reauth_required', reauth: { provider: 'body-provider' } },
+      'argocd',
+      new Headers({ 'X-Inari-Reauth': 'header-provider' }),
+    );
+    expect(err.reauth).toEqual({ provider: 'body-provider' });
+  });
+
+  it('maps canonical flat denial and auth-unavailable codes', () => {
+    expect(classifyExtensionError(403, { detail: 'forbidden', code: 'inari_fga_denied' }, 'ext')).toBeInstanceOf(FgaDeniedError);
+    expect(classifyExtensionError(502, { detail: 'unavailable', code: 'auth_unavailable' }, 'ext')).toBeInstanceOf(ExchangeFailedError);
+  });
+});
+
 describe('isExtensionApiError', () => {
   it('narrows extension errors', () => {
     const err = classifyExtensionError(403, { error: { code: 'fga_denied' } }, 'git');

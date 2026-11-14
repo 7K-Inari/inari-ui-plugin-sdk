@@ -9,7 +9,10 @@ Stack: TypeScript, npm package
 ```sh
 npm create inari-ui-extension my-extension
 cd my-extension && npm install && npm run dev
+npm run typecheck && npm run build
 ```
+
+The build uses the canonical `inari-ui-ext` CLI and emits `dist/remoteEntry.js`; no consumer webpack config or install-time SDK clone/build is needed.
 
 ## Writing an extension
 
@@ -30,6 +33,7 @@ export default createExtension({
 - [Blueprint contract](docs/blueprints.md) — typed slots, zod manifests
 - [Host APIs](docs/host-apis.md) — auth/tenant contexts, API client, design tokens, testing mocks
 - [Dev harness](docs/harness.md) — standalone dev against a mock control plane
+- [Production build](docs/build.md) — canonical Module Federation remoteEntry.js
 - [Shared dependencies](docs/shared-dependencies.md) — React singleton contract
 
 ## Package entry points

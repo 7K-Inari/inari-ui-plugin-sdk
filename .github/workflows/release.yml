@@ -48,14 +48,7 @@ jobs:
         run: |
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
 
-      - name: Build
-        run: |
-          if node -e "process.exit(require('./package.json').scripts && require('./package.json').scripts.build ? 0 : 1)"; then
-            npm run build
-          else
-            echo "No build script yet (pre-M4 scaffold); skipping"
-          fi
-
+      # npm publish runs prepack, which builds the exact published artifact.
       # Trusted publishing requires npm CLI >= 11.5.1 (Node >= 22.14).
       - name: Ensure npm CLI >= 11.5.1
         run: npm install -g npm@^11  # trusted publishing needs >= 11.5.1; npm@12 requires newer Node than some runners carry

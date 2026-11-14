@@ -114,9 +114,10 @@ export class ApiClient {
     path: string,
     init: { method?: string; body?: unknown } = {},
   ): Promise<T> {
+    const proxyPath = extensionProxyPath(name, path);
     const token = await this.getToken();
     const res = await this.fetchImpl(
-      `${this.baseUrl}/api/extensions/${encodeURIComponent(name)}${path}`,
+      `${this.baseUrl}${proxyPath}`,
       {
         method: init.method ?? 'GET',
         headers: {
@@ -136,7 +137,7 @@ export class ApiClient {
       parseFailed = true;
     }
     if (!res.ok) {
-      throw classifyExtensionError(res.status, parsed, name);
+      throw classifyExtensionError(res.status, parsed, name, res.headers);
     }
     if (parseFailed) {
       throw new ExtensionFailureError(
@@ -147,4 +148,36 @@ export class ApiClient {
     }
     return parsed as T;
   }
+}
+
+function extensionProxyPath(name: string, path: string): string {
+  if (name.length === 0) throw new Error('extension name is required');
+  if (!path.startsWith('/') || path.startsWith('//')) {
+    throw new Error('extension path must start with exactly one slash');
+  }
+  for (const character of path) {
+    const code = character.charCodeAt(0);
+    if (character === '\\' || code <= 0x1f || code === 0x7f) {
+      throw new Error('extension path contains forbidden characters');
+    }
+  }
+  const pathname = path.split(/[?#]/, 1)[0];
+  for (const segment of pathname.split('/')) {
+    let decoded: string;
+    try {
+      decoded = decodeURIComponent(segment);
+    } catch {
+      throw new Error('extension path contains invalid percent encoding');
+    }
+    if (decoded === '.' || decoded === '..') {
+      throw new Error('extension path must not contain dot segments');
+    }
+    for (const character of decoded) {
+      const code = character.charCodeAt(0);
+      if (character === '/' || character === '\\' || code <= 0x1f || code === 0x7f) {
+        throw new Error('extension path contains forbidden encoded characters');
+      }
+    }
+  }
+  return `/api/extensions/${encodeURIComponent(name)}${path}`;
 }
