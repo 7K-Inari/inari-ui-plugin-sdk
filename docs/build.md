@@ -10,7 +10,7 @@ Options:
 
 - `entry` defaults to `./src/index.tsx`.
 - `--name` is required and must equal the extension's registry name.
-- `--out-dir` defaults to `dist`.
+- `--out-dir` defaults to `dist`. Because the output directory is cleaned, it must not contain the project, entry, or tsconfig; use a dedicated artifact directory.
 
 The command typechecks the entry graph through `ts-loader` and emits a production `remoteEntry.js` plus its required chunks. The exposed module is `./extension`; the webpack container is the same normalized name used by the console loader. `npm run typecheck` remains available as a separate project-wide check in the scaffold.
 

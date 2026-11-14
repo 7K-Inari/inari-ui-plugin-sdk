@@ -1,4 +1,4 @@
-import { mkdtempSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -29,7 +29,10 @@ describe('buildExtension', { timeout: 30000 }, () => {
     expect(result.outDir).toBe(resolve(outDir));
     const remoteEntry = join(outDir, 'remoteEntry.js');
     expect(statSync(remoteEntry).size).toBeGreaterThan(0);
-    expect(readFileSync(remoteEntry, 'utf8')).toContain('inari_ext_test');
+    const remoteSource = readFileSync(remoteEntry, 'utf8');
+    expect(remoteSource).toContain('inari_ext_test');
+    expect(remoteSource).toContain('webpackChunkinari_ext_test');
+    expect(result.stats.compilation.outputOptions.uniqueName).toBe('inari_ext_test');
 
     const stats = result.stats.toJson({ modules: true });
     const modules = stats.modules ?? [];
@@ -60,6 +63,25 @@ describe('buildExtension', { timeout: 30000 }, () => {
 
   it('rejects an empty extension name', async () => {
     await expect(buildExtension({ name: '' })).rejects.toThrow('extension name is required');
+  });
+
+  it('rejects cleaning the consumer project without deleting its sources', async () => {
+    const projectDir = tempDirectory();
+    mkdirSync(join(projectDir, 'src'));
+    const entry = join(projectDir, 'src/index.tsx');
+    const tsconfig = join(projectDir, 'tsconfig.json');
+    writeFileSync(entry, 'export default { manifest: { name: "unsafe" } };');
+    writeFileSync(tsconfig, '{}');
+
+    const previousDirectory = process.cwd();
+    process.chdir(projectDir);
+    try {
+      await expect(buildExtension({ name: 'unsafe', outDir: '.' })).rejects.toThrow(/must not contain/);
+    } finally {
+      process.chdir(previousDirectory);
+    }
+    expect(existsSync(entry)).toBe(true);
+    expect(existsSync(tsconfig)).toBe(true);
   });
 
   it('rejects a missing entry', async () => {

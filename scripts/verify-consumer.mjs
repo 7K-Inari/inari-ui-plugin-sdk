@@ -1,4 +1,4 @@
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
@@ -154,6 +154,7 @@ console.log('invokeExtension and re-auth consumer checks passed');
   if (!existsSync(remoteEntry) || statSync(remoteEntry).size === 0) throw new Error('consumer build did not emit remoteEntry.js');
   const remoteSource = readFileSync(remoteEntry, 'utf8');
   if (!remoteSource.includes('clean_consumer')) throw new Error('remoteEntry.js lacks normalized container name');
+  if (!remoteSource.includes('webpackChunkclean_consumer')) throw new Error('remoteEntry.js lacks a registry-specific webpack runtime name');
 
   const sdkRoot = join(work, 'node_modules/@7k-inari/ui-plugin-sdk');
   const manifest = JSON.parse(readFileSync(join(sdkRoot, 'package.json'), 'utf8'));
@@ -172,6 +173,15 @@ console.log('invokeExtension and re-auth consumer checks passed');
   }
   if (!manifest.peerDependencies?.['react-router-dom']) throw new Error('react-router-dom peer contract missing');
   if (manifest.scripts?.postinstall || manifest.scripts?.prepare) throw new Error('published package requires an install-time build hook');
+
+  const unsafeBuild = spawnSync(process.execPath, [
+    join(sdkRoot, 'bin/inari-ui-ext.mjs'),
+    'build', './src/index.tsx', '--name', 'clean-consumer', '--out-dir', '.',
+  ], { cwd: work, encoding: 'utf8' });
+  if (unsafeBuild.status === 0) throw new Error('consumer build allowed cleaning the project directory');
+  if (!existsSync(join(work, 'src/index.tsx')) || !existsSync(join(work, 'tsconfig.json'))) {
+    throw new Error('consumer build deleted project sources while rejecting an unsafe output directory');
+  }
   console.log(`clean UI consumer passed: ${dependency}`);
 } finally {
   rmSync(work, { recursive: true, force: true });

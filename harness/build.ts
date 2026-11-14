@@ -1,5 +1,5 @@
 import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { isAbsolute, relative, resolve, sep } from 'node:path';
 import { createRequire } from 'node:module';
 import webpack, { type Configuration, type Stats } from 'webpack';
 import { extensionContainerName } from '../src/host/remote-name.js';
@@ -24,6 +24,9 @@ export async function buildExtension(options: BuildExtensionOptions): Promise<Bu
   const outDir = resolve(process.cwd(), options.outDir ?? 'dist');
   const tsconfig = resolve(process.cwd(), options.tsconfig ?? 'tsconfig.json');
   if (!existsSync(tsconfig)) throw new Error(`extension tsconfig not found: ${tsconfig}`);
+  if (containsPath(outDir, process.cwd()) || containsPath(outDir, entry) || containsPath(outDir, tsconfig)) {
+    throw new Error('extension output directory must not contain the project, entry, or tsconfig');
+  }
 
   const require = createRequire(import.meta.url);
   const shared = {
@@ -39,7 +42,7 @@ export async function buildExtension(options: BuildExtensionOptions): Promise<Bu
     entry,
     mode: 'production',
     devtool: false,
-    output: { path: outDir, publicPath: 'auto', clean: true },
+    output: { path: outDir, publicPath: 'auto', clean: true, uniqueName: containerName },
     resolve: { extensions: ['.tsx', '.ts', '.js'] },
     module: {
       rules: [{
@@ -75,6 +78,11 @@ export async function buildExtension(options: BuildExtensionOptions): Promise<Bu
     })}`);
   }
   return { containerName, outDir, stats };
+}
+
+function containsPath(parent: string, candidate: string): boolean {
+  const child = relative(parent, candidate);
+  return child === '' || (child !== '..' && !child.startsWith(`..${sep}`) && !isAbsolute(child));
 }
 
 function compile(config: Configuration): Promise<Stats> {
