@@ -1,5 +1,21 @@
 # Host APIs
 
+## Contract metadata and deprecation
+
+`inari.ui.v1` covers the six blueprint slot kinds, host APIs, invocation/token behavior, shared singletons, and design tokens. Declare it together with the compiled SDK range in `extension.yaml`:
+
+```yaml
+spec:
+  contracts:
+    ui:
+      sdk: ">=0.1.8 <2.0.0"
+      hostApi: "inari.ui.v1"
+```
+
+`createExtension` stamps the same metadata into the remote manifest. During the initial optional phase, legacy remotes without metadata show a legacy warning. After the published minimum 90-day/two-stable-release window, missing declarations are rejected and incompatible remotes show required versions instead of mounting. Future UI majors use a published v1+v2 overlap; unknown additive v1 metadata remains forward-compatible.
+
+# Host APIs
+
 ## Auth context
 
 ```tsx

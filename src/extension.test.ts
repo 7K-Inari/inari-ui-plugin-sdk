@@ -7,6 +7,7 @@ import { ClusterTabBlueprint } from './blueprints/cluster-tab';
 import { CatalogCardBlueprint } from './blueprints/catalog-card';
 import { InstanceActionBlueprint } from './blueprints/instance-action';
 import { FormWidgetBlueprint } from './blueprints/form-widget';
+import { UI_HOST_API_V1, UI_PLUGIN_SDK_RANGE } from './contracts';
 
 const Dummy = () => createElement('div');
 
@@ -32,6 +33,24 @@ describe('createExtension', () => {
       'form-widget',
     ]);
     expect(ext.slots).toHaveLength(6);
+    expect(ext.manifest.contracts?.ui).toEqual({
+      hostApi: UI_HOST_API_V1,
+      sdk: UI_PLUGIN_SDK_RANGE,
+    });
+  });
+
+  it('rejects contradictory explicit contract metadata', () => {
+    expect(() =>
+      createExtension({
+        manifest: {
+          name: 'x',
+          version: '0.1.0',
+          kind: 'ui',
+          contracts: { ui: { hostApi: 'inari.ui.v2', sdk: UI_PLUGIN_SDK_RANGE } },
+        },
+        slots: [NavItemBlueprint({ name: 'n', title: 't', path: '/p' })],
+      }),
+    ).toThrow(/contract|hostApi/i);
   });
 
   it('rejects an invalid manifest', () => {

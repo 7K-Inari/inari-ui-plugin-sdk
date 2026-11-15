@@ -14,6 +14,8 @@ Options:
 
 The command typechecks the entry graph through `ts-loader` and emits a production `remoteEntry.js` plus its required chunks. The exposed module is `./extension`; the webpack container is the same normalized name used by the console loader. `npm run typecheck` remains available as a separate project-wide check in the scaffold.
 
+`createExtension` stamps `manifest.contracts.ui` with the SDK's `hostApi` and supported `sdk` range. The host reads this metadata before exposing any slot. Explicit metadata must match the compiling SDK; contradictory values fail at authoring/build time. Keep the accompanying `extension.yaml` declaration in sync so registration and remote preflight agree.
+
 ## Host-shared modules
 
 The build marks these as singletons with no local fallback:

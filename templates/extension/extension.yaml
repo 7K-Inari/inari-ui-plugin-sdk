@@ -1,0 +1,19 @@
+apiVersion: inari.io/v1alpha1
+kind: Extension
+metadata:
+  name: my-inari-extension
+spec:
+  version: 0.1.0
+  kinds: [ui]
+  ui:
+    remoteEntry: https://extensions.example.com/my-inari-extension/remoteEntry.js
+    slots:
+      - { kind: nav-item, name: my-nav }
+      - { kind: page, name: my-page }
+      - { kind: cluster-tab, name: my-cluster-tab }
+  contracts:
+    ui:
+      sdk: ">=0.1.8 <2.0.0"
+      hostApi: inari.ui.v1
+  permissions:
+    - extensions:invoke:my-inari-extension
