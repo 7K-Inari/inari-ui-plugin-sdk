@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.1.9](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.8...ui-plugin-sdk-v0.1.9) (2026-11-20)
+
+
+### Features
+
+* **contracts:** stamp UI compatibility metadata ([60f2925](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/60f2925cb2ec30cdbc77826bbb8191e240dd1de0))
+
+
+### Miscellaneous Chores
+
+* **deps:** update dependency react-router-dom to v7.18.6 ([#77](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/77)) ([53be0ac](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/53be0acd40bc6a278d20dad476e50fab69a5c3ec))
+* **deps:** update dependency typescript-eslint to v8.73.0 ([#75](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/75)) ([6df31ec](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/6df31ec5d173017cb0534602680dc8f672c9c03f))
+* **deps:** update dependency vitest to v5.1.1 ([#76](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/76)) ([122e445](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/122e445285b144dd1234841fcb90cb473fe01864))
+* **deps:** update dependency webpack to v5.112.2 ([#73](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/73)) ([7edc180](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/7edc1800f643bc58b9bf8c26abccd9ba8eb58ea4))
+* **deps:** update dependency webpack to v5.113.0 ([#78](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/78)) ([6de9d35](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/6de9d35841ef2d0b1da5da0e20230a646209ca3f))
+
 ## [0.1.8](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.7...ui-plugin-sdk-v0.1.8) (2026-11-14)
 
 
