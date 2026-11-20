@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.10](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.9...ui-plugin-sdk-v0.1.10) (2026-11-20)
+
+
+### Miscellaneous Chores
+
+* **deps:** update all non-major dependencies ([#80](https://github.com/7K-Inari/inari-ui-plugin-sdk/issues/80)) ([3a985fb](https://github.com/7K-Inari/inari-ui-plugin-sdk/commit/3a985fba92e30645967c255c8649f3285754f799))
+
 ## [0.1.9](https://github.com/7K-Inari/inari-ui-plugin-sdk/compare/ui-plugin-sdk-v0.1.8...ui-plugin-sdk-v0.1.9) (2026-11-20)
 
 
