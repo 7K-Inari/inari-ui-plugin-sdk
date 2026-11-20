@@ -17,12 +17,26 @@ const slotContributionSchema = z.object({
   name: nameSchema,
 });
 
+const uiContractSchema = z
+  .object({
+    sdk: z.string().min(1),
+    hostApi: z.string().min(1),
+  })
+  .passthrough();
+
+const extensionContractsSchema = z
+  .object({
+    ui: uiContractSchema.optional(),
+  })
+  .passthrough();
+
 export const extensionManifestSchema = z.object({
   name: nameSchema,
   version: z.string().min(1),
   kind: z.literal('ui'),
   title: z.string().optional(),
   description: z.string().optional(),
+  contracts: extensionContractsSchema.optional(),
   slots: z.array(slotContributionSchema).min(1),
 });
 

@@ -1,5 +1,7 @@
 # inari-ui-plugin-sdk
 
+UI extensions declare `spec.contracts.ui.sdk` and `spec.contracts.ui.hostApi` in `extension.yaml`. `createExtension` stamps the same values into the remote manifest so the console can reject incompatible remotes before exposing slots. Legacy metadata is optional only during the documented deprecation window.
+
 TypeScript SDK for Inari UI extensions: extension-point blueprints, host APIs, dev harness to run an extension standalone against a dev control plane (plan §6 #7, §5.8, §8.4).
 
 Stack: TypeScript, npm package

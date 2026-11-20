@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -58,6 +58,24 @@ describe('buildExtension', { timeout: 30000 }, () => {
     ]) {
       const bundled = modules.filter((module) => module.name?.includes(forbidden)).map((module) => module.name);
       expect(bundled, `host singleton bundled from ${forbidden}`).toEqual([]);
+    }
+  });
+
+  it('preserves createExtension metadata and every declared slot in the exposed module', async () => {
+    const outDir = tempDirectory();
+    await buildExtension({
+      entry: 'harness/testdata/basic-extension.tsx',
+      name: 'inari-ext-test',
+      outDir,
+      tsconfig: 'tsconfig.json',
+    });
+    const remoteSource = readdirSync(outDir)
+      .filter((name) => name.endsWith('.js'))
+      .map((name) => readFileSync(join(outDir, name), 'utf8'))
+      .join('\n');
+    expect(remoteSource).toContain('createExtension');
+    for (const slot of ['test-nav', 'test-card', 'test-tab', 'test-action', 'test-widget', 'basic-page']) {
+      expect(remoteSource).toContain(slot);
     }
   });
 

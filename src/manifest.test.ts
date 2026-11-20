@@ -13,6 +13,24 @@ describe('parseExtensionManifest', () => {
     expect(m.slots).toHaveLength(1);
   });
 
+  it('preserves legacy missing metadata and accepts explicit future declarations', () => {
+    const legacy = parseExtensionManifest({
+      name: 'legacy',
+      version: '0.1.0',
+      kind: 'ui',
+      slots: [{ kind: 'page', name: 'p' }],
+    });
+    expect(legacy.contracts).toBeUndefined();
+    const future = parseExtensionManifest({
+      name: 'future',
+      version: '0.1.0',
+      kind: 'ui',
+      contracts: { ui: { hostApi: 'inari.ui.v2', sdk: '^1.0.0' } },
+      slots: [{ kind: 'page', name: 'p' }],
+    });
+    expect(future.contracts?.ui?.hostApi).toBe('inari.ui.v2');
+  });
+
   it('rejects wrong kind', () => {
     expect(() =>
       parseExtensionManifest({

@@ -3,7 +3,15 @@ import { version as reactDOMVersion } from 'react-dom';
 import { createRoot } from 'react-dom/client';
 import { useLocation } from 'react-router-dom';
 import { z } from 'zod';
-import { createExtension, PageBlueprint } from '@7k-inari/ui-plugin-sdk';
+import {
+  CatalogCardBlueprint,
+  ClusterTabBlueprint,
+  createExtension,
+  FormWidgetBlueprint,
+  InstanceActionBlueprint,
+  NavItemBlueprint,
+  PageBlueprint,
+} from '@7k-inari/ui-plugin-sdk';
 
 function BasicPage() {
   const location = useLocation();
@@ -18,6 +26,11 @@ export default createExtension({
     title: z.string().parse('Basic'),
   },
   slots: [
+    NavItemBlueprint({ name: 'test-nav', title: 'Test', path: '/basic' }),
+    CatalogCardBlueprint({ name: 'test-card', component: BasicPage }),
+    ClusterTabBlueprint({ name: 'test-tab', title: 'Test', component: BasicPage }),
+    InstanceActionBlueprint({ name: 'test-action', label: 'Test', run: () => {} }),
+    FormWidgetBlueprint({ name: 'test-widget', component: BasicPage }),
     PageBlueprint({ name: 'basic-page', path: '/basic', component: BasicPage }),
   ],
 });
